@@ -223,7 +223,10 @@ layers configuration. You are free to put any user code."
 
   (setq frame-title-format '("%b: %f"))
 
-  (custom-set-variables '(coffee-tab-width 4))
+  (custom-set-variables
+   '(coffee-tab-width 4)
+   '(web-mode-enable-auto-quoting nil)
+   )
 
   (setq js2-mode-show-strict-warnings nil)
 
