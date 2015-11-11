@@ -10,3 +10,14 @@ Usage:
     $ npm install -g eslint babel-eslint eslint-plugin-react
     $ npm install -g js-beautify
 
+Key bindings:
+
+    I: insert mode, N: normal mode, V: visual mode
+
+    | key   | function         | description                                                   | mode(s) |
+    |-------+------------------+---------------------------------------------------------------+---------|
+    | M-SPC | just-one-space   | change multiple spaces into just one space                    | I, N    |
+    | >     | evil-shift-right | indent region right by fixed amount                           | V       |
+    | <     | evil-shift-left  | indent region left by fixed amount                            | V       |
+    | J     | evil-join        | join the next line with the current line                      | N       |
+    | SPC v | er/expand-region | enter expand region mode. hit v to expand. hit V to contract. | N       |

@@ -31,14 +31,15 @@ values."
      git
      markdown
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
+     spell-checking
      syntax-checking
-     ;; version-control
+     version-control
+     osx
      chrome
      themes-megapack
+     ranger
+     eyebrowse
+     lua
      python
      html
      javascript
@@ -48,7 +49,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(ag)
+   dotspacemacs-additional-packages '(ag
+                                      nginx-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -199,6 +201,12 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  ;; Fix indentation with < and > via https://www.youtube.com/watch?v=HKF41ivkBb0
+  (setq-default evil-shift-round nil)
+  ;; Use ranger instead of dired https://github.com/TheBB/dotfiles/blob/master/emacs/spacemacs.el
+  (setq-default ranger-override-dired t)
+
+  (message "end of user-init")
   )
 
 (defun dotspacemacs/user-config ()
@@ -207,39 +215,72 @@ user code."
 layers configuration. You are free to put any user code."
 
   ;; https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#powerline-separators
-  (setq powerline-default-separator 'nil)
-  ;; https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#escaping
-  (setq-default evil-escape-key-sequence "jk")
-  (setq-default evil-escape-unordered-key-sequence t)
+  (setq powerline-default-separator nil)
+  (setq-default evil-search-highlight-persist nil)  ;; <- does not work
 
   ;; key bindings
   (global-set-key [f7] 'previous-error)
   (global-set-key [f8] 'next-error)
+  (evil-leader/set-key "os" 'ag-project)
 
   ;; set helm fuzzy match options
   (setq helm-M-x-fuzzy-match t)
   (setq helm-buffers-fuzzy-matching nil)
   (setq helm-recentf-fuzzy-match t)
 
-  (setq frame-title-format '("%b: %f"))
+  ;; show the filepath in the frame title
+  ;; http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/ 
+  (setq frame-title-format
+        '((:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
+
+  ;; Javascript/HTML/CSS indentation
+  (setq sc-indent-offset 2)
+  (setq-default
+   evil-shift-width sc-indent-offset
+   ;; jssc-indent-offset-mode
+   jssc-indent-offset-basic-offset sc-indent-offset
+   ;; json-mode
+   js-indent-level sc-indent-offset
+   ;; web-mode
+   css-indent-offset sc-indent-offset
+   web-mode-markup-indent-offset sc-indent-offset
+   web-mode-css-indent-offset sc-indent-offset
+   web-mode-code-indent-offset sc-indent-offset
+   web-mode-attr-indent-offset sc-indent-offset)
+
+  (with-eval-after-load 'web-mode
+    (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
+    )
 
   (custom-set-variables
    '(coffee-tab-width 4)
    '(web-mode-enable-auto-quoting nil)
    )
 
-  (setq js2-mode-show-strict-warnings nil)
+  ;; In react-mode, change M-; to use // style comments
+  (defun sc-javascript-comment-dwim (arg)
+    (interactive "*P")
+    (require 'newcomment)
+    (let ((comment-start "//")
+          (comment-end "")
+          (comment-start-skip "// *"))
+      (comment-dwim arg)
+      ))
+  (define-key react-mode-map (kbd "M-;") 'sc-javascript-comment-dwim)
+  (define-key react-mode-map (kbd "C-c /") 'web-mode-element-close)
 
-  ;; http://codewinds.com/blog/2015-04-02-emacs-flycheck-eslint-jsx.html
-  ;; disable jshint since we prefer eslint checking
-  (setq-default flycheck-disabled-checkers
-                (append flycheck-disabled-checkers
-                        '(javascript-jshint)))
+  ;; Let flycheck handle parse errors
+  ;; https://github.com/magnars/.emacs.d/blob/bc02c2d8853afc8ee61cc705945b47c725b9fb65/settings/setup-js2-mode.el#L17
+  (setq-default js2-mode-show-parse-errors nil)
+  (setq-default js2-mode-show-strict-warnings nil)
 
-  ;; http://cha1tanya.com/2015/06/20/configuring-web-mode-with-jsx.html
-  (setq web-mode-content-types-alist
-        '(("jsx" . "\\.js[x]?\\'")))
+  ;; set .js files to react mode
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
+
+  (message "end of user-config")
 )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+;; SPC f e R
