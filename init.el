@@ -1,7 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-;; SPC f e R
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -31,7 +30,8 @@ values."
      git
      markdown
      org
-     spell-checking
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
      syntax-checking
      version-control
      osx
@@ -235,6 +235,9 @@ layers configuration. You are free to put any user code."
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
 
+  ;; http://stackoverflow.com/questions/898401/how-to-get-focus-follows-mouse-over-buffers-in-emacs
+  (setq mouse-autoselect-window t)
+
   ;; Javascript/HTML/CSS indentation
   (setq sc-indent-offset 2)
   (setq-default
@@ -250,6 +253,8 @@ layers configuration. You are free to put any user code."
    web-mode-code-indent-offset sc-indent-offset
    web-mode-attr-indent-offset sc-indent-offset)
 
+  (setq web-mode-enable-current-column-highlight t)
+
   (with-eval-after-load 'web-mode
     (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
     (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
@@ -261,17 +266,32 @@ layers configuration. You are free to put any user code."
    '(web-mode-enable-auto-quoting nil)
    )
 
-  ;; In react-mode, change M-; to use // style comments
+  ;; use // style comments
   (defun sc-javascript-comment-dwim (arg)
     (interactive "*P")
     (require 'newcomment)
     (let ((comment-start "//")
           (comment-end "")
+          (comment-region-function 'comment-region-default)
+          (uncomment-region-function 'uncomment-region-default)
           (comment-start-skip "// *"))
       (comment-dwim arg)
       ))
-  (define-key react-mode-map (kbd "M-;") 'sc-javascript-comment-dwim)
-  (define-key react-mode-map (kbd "C-c /") 'web-mode-element-close)
+
+  ;; additional key binding for comment-dwim
+  (global-set-key (kbd "C-;") 'comment-dwim)
+
+  ;; insert // style comments with C-;
+  ;; use M-; for JSX comments
+  (add-hook
+   'web-mode-hook
+   (lambda ()
+      (define-key web-mode-map (kbd "C-;") 'sc-javascript-comment-dwim)))
+
+  (add-hook
+   'scss-mode-hook
+   (lambda ()
+      (define-key scss-mode-map (kbd "M-;") 'sc-javascript-comment-dwim)))
 
   ;; Let flycheck handle parse errors
   ;; https://github.com/magnars/.emacs.d/blob/bc02c2d8853afc8ee61cc705945b47c725b9fb65/settings/setup-js2-mode.el#L17
@@ -283,4 +303,3 @@ layers configuration. You are free to put any user code."
 
   (message "end of user-config")
 )
-;; SPC f e R
