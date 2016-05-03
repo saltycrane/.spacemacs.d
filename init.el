@@ -39,6 +39,7 @@ values."
      themes-megapack
      ranger
      eyebrowse
+     colors
      lua
      python
      html
@@ -50,6 +51,8 @@ values."
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(ag
+                                      evil-matchit
+                                      f
                                       nginx-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -88,11 +91,17 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(sanityinc-tomorrow-bright
+   dotspacemacs-themes '(;; dark themes
+                         sanityinc-tomorrow-bright
                          seti
-                         dakrone
-                         ample
-                         spacemacs-dark
+                         ;; dakrone
+                         ;; ample
+                         ;; spacemacs-dark
+                         ;; ;; light themes
+                         ritchie
+                         stekene-light
+                         tango-plus
+                         gandalf
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -203,8 +212,6 @@ It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
   ;; Fix indentation with < and > via https://www.youtube.com/watch?v=HKF41ivkBb0
   (setq-default evil-shift-round nil)
-  ;; Use ranger instead of dired https://github.com/TheBB/dotfiles/blob/master/emacs/spacemacs.el
-  (setq-default ranger-override-dired t)
 
   (message "end of user-init")
   )
@@ -286,12 +293,12 @@ layers configuration. You are free to put any user code."
   (add-hook
    'web-mode-hook
    (lambda ()
-      (define-key web-mode-map (kbd "C-;") 'sc-javascript-comment-dwim)))
+     (define-key web-mode-map (kbd "C-;") 'sc-javascript-comment-dwim)))
 
   (add-hook
    'scss-mode-hook
    (lambda ()
-      (define-key scss-mode-map (kbd "M-;") 'sc-javascript-comment-dwim)))
+     (define-key scss-mode-map (kbd "C-;") 'sc-javascript-comment-dwim)))
 
   ;; Let flycheck handle parse errors
   ;; https://github.com/magnars/.emacs.d/blob/bc02c2d8853afc8ee61cc705945b47c725b9fb65/settings/setup-js2-mode.el#L17
@@ -300,6 +307,52 @@ layers configuration. You are free to put any user code."
 
   ;; set .js files to react mode
   (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
+
+  (global-evil-matchit-mode 1)
+
+  (add-to-list 'auto-mode-alist '("www\\.saltycrane\\.com" . web-mode))
+
+  (defun sc-escape-html (start end)
+    (interactive "r")
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        (goto-char (point-min))
+        (replace-string "&" "&amp;")
+        (goto-char (point-min))
+        (replace-string "<" "&lt;")
+        (goto-char (point-min))
+        (replace-string ">" "&gt;")
+        )))
+
+  ;;; Flow (JS) flycheck config (http://flowtype.org)
+  ;; from https://github.com/bodil/emacs.d/blob/master/bodil/bodil-js.el
+  (require 'f)
+  (require 'json)
+  (defun flycheck-parse-flow (output checker buffer)
+    (let ((json-array-type 'list))
+      (let ((o (json-read-from-string output)))
+        (mapcar #'(lambda (errp)
+                    (let ((err (cadr (assoc 'message errp))))
+                      (flycheck-error-new
+                       :line (cdr (assoc 'line err))
+                       :column (cdr (assoc 'start err))
+                       :level 'error
+                       :message (cdr (assoc 'descr err))
+                       :filename (f-relative
+                                  (cdr (assoc 'path err))
+                                  (f-dirname (file-truename
+                                              (buffer-file-name))))
+                       :buffer buffer
+                       :checker checker)))
+                (cdr (assoc 'errors o))))))
+
+  (flycheck-define-checker javascript-flow
+    "Static type checking using Flow."
+    :command ("flow" "--json" source-original)
+    :error-parser flycheck-parse-flow
+    :modes react-mode)
+  (add-to-list 'flycheck-checkers 'javascript-flow)
 
   (message "end of user-config")
 )
