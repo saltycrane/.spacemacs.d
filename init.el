@@ -224,7 +224,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers 'relative
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -400,10 +400,12 @@ you should place your code here."
                 (cdr (assoc 'errors o))))))
 
   (flycheck-define-checker javascript-flow
-    "Static type checking using Flow."
+    "Javascript type checking using Flow."
     :command ("flow" "--json" source-original)
     :error-parser flycheck-parse-flow
-    :modes react-mode)
+    :modes react-mode
+    :next-checkers ((error . javascript-eslint))
+    )
   (add-to-list 'flycheck-checkers 'javascript-flow)
 
   (message "end of user-config")
