@@ -277,6 +277,9 @@ you should place your code here."
   (setq powerline-default-separator nil)
   (setq-default evil-search-highlight-persist nil)  ;; <- does not work
 
+  ;; add "--hidden" to the default ag argument list
+  (setq ag-arguments '("--hidden" "--nocolor" "--literal" "--line-number" "--smart-case" "--nogroup" "--column" "--stats" "--"))
+
   ;; key bindings
   (global-set-key [f7] 'previous-error)
   (global-set-key [f8] 'next-error)
