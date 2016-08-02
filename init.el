@@ -36,9 +36,6 @@ values."
      version-control
      osx
      chrome
-     themes-megapack
-     ranger
-     eyebrowse
      colors
      lua
      python
@@ -53,7 +50,9 @@ values."
    dotspacemacs-additional-packages '(ag
                                       evil-matchit
                                       f
-                                      nginx-mode)
+                                      nginx-mode
+                                      color-theme-sanityinc-tomorrow
+                                      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -108,17 +107,9 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(;; dark themes
+   dotspacemacs-themes '(
                          sanityinc-tomorrow-bright
-                         seti
-                         ;; dakrone
-                         ;; ample
-                         ;; spacemacs-dark
-                         ;; ;; light themes
-                         ritchie
-                         stekene-light
-                         tango-plus
-                         gandalf
+                         spacemacs-dark
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
