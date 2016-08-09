@@ -52,9 +52,15 @@ values."
                                       f
                                       nginx-mode
                                       color-theme-sanityinc-tomorrow
+                                      yaml-mode
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    ;; disable because getting ImportError.
+                                    ;; see https://github.com/syl20bnr/spacemacs/issues/6629
+                                    ;; and https://github.com/proofit404/anaconda-mode/issues/188
+                                    anaconda-mode
+                                    )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -116,7 +122,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
