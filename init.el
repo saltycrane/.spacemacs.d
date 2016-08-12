@@ -48,9 +48,10 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(ag
+                                      color-theme-sanityinc-tomorrow
+                                      dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
                                       nginx-mode
-                                      color-theme-sanityinc-tomorrow
                                       yaml-mode
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -279,7 +280,10 @@ you should place your code here."
   ;; key bindings
   (global-set-key [f7] 'previous-error)
   (global-set-key [f8] 'next-error)
-  (evil-leader/set-key "os" 'ag-project)
+  (spacemacs/set-leader-keys "d" 'helm-mini)
+  (spacemacs/set-leader-keys "os" 'ag-project)
+  (spacemacs/set-leader-keys "og" 'dumb-jump-go)
+  (spacemacs/set-leader-keys "oG" 'dumb-jump-back)
 
   ;; set helm fuzzy match options
   (setq helm-M-x-fuzzy-match t)
