@@ -49,7 +49,6 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(ag
                                       evil-matchit
-                                      f
                                       nginx-mode
                                       color-theme-sanityinc-tomorrow
                                       yaml-mode
@@ -381,6 +380,8 @@ you should place your code here."
   ;; from https://github.com/bodil/emacs.d/blob/master/bodil/bodil-js.el
   (require 'f)
   (require 'json)
+  (require 'flycheck)
+
   (defun flycheck-parse-flow (output checker buffer)
     (let ((json-array-type 'list))
       (let ((o (json-read-from-string output)))

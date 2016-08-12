@@ -9,6 +9,7 @@ Usage:
     $ npm install -g tern
     $ npm install -g eslint babel-eslint eslint-plugin-react
     $ npm install -g js-beautify
+    $ npm install -g flow-bin
 
 Key bindings:
 
