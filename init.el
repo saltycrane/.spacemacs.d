@@ -26,22 +26,22 @@ values."
      (auto-completion :variables
                       auto-completion-private-snippets-directory "~/.spacemacs.d/snippets")
      better-defaults
+     chrome
+     colors
      emacs-lisp
      git
+     html
+     javascript
+     lua
      markdown
      org
+     osx
+     python
+     react
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
      version-control
-     osx
-     chrome
-     colors
-     lua
-     python
-     html
-     javascript
-     react
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
