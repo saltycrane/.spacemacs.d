@@ -31,13 +31,15 @@ values."
      emacs-lisp
      git
      html
+     ivy
      javascript
      lua
-     markdown
+     (markdown :variables markdown-live-preview-engine 'vmd)
      org
      osx
      python
      react
+     ruby
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
      syntax-checking
@@ -52,6 +54,8 @@ values."
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
                                       nginx-mode
+                                      visual-regexp
+                                      visual-regexp-steroids
                                       yaml-mode
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -280,7 +284,8 @@ you should place your code here."
   ;; key bindings
   (global-set-key [f7] 'previous-error)
   (global-set-key [f8] 'next-error)
-  (spacemacs/set-leader-keys "d" 'helm-mini)
+  ;; (spacemacs/set-leader-keys "d" 'helm-mini)
+  (spacemacs/set-leader-keys "d" 'ivy-switch-buffer)
   (spacemacs/set-leader-keys "os" 'ag-project)
   (spacemacs/set-leader-keys "og" 'dumb-jump-go)
   (spacemacs/set-leader-keys "oG" 'dumb-jump-back)
@@ -412,6 +417,10 @@ you should place your code here."
     :next-checkers ((error . javascript-eslint))
     )
   (add-to-list 'flycheck-checkers 'javascript-flow)
+
+  ;; visual-regexp-steroids
+  (require 'visual-regexp)
+  (require 'visual-regexp-steroids)
 
   (message "end of user-config")
   )
