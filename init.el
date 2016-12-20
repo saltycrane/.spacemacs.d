@@ -345,6 +345,18 @@ you should place your code here."
       (comment-dwim arg)
       ))
 
+  ;; copy and comment using // comments from above
+  ;; reference https://github.com/redguardtoo/evil-nerd-commenter/blob/54c618aada776bfda0742819ff9e91845a91e095/evil-nerd-commenter.el#L592
+  (defun sc-javascript-copy-and-comment (start end)
+    (interactive "r")
+    (kill-new
+     ;; ;; add a newline to the start and remove a newline from the end
+     ;; (concat
+     ;;  "\n" (replace-regexp-in-string
+     ;;        "\n\\'" "" (buffer-substring-no-properties start end))))
+     (buffer-substring-no-properties start end))
+    (sc-javascript-comment-dwim nil))
+
   ;; additional key binding for comment-dwim
   (global-set-key (kbd "C-;") 'comment-dwim)
 
@@ -353,12 +365,12 @@ you should place your code here."
   (add-hook
    'web-mode-hook
    (lambda ()
-     (define-key web-mode-map (kbd "C-;") 'sc-javascript-comment-dwim)))
+     (define-key web-mode-map (kbd "C-;") 'sc-javascript-copy-and-comment)))
 
   (add-hook
    'scss-mode-hook
    (lambda ()
-     (define-key scss-mode-map (kbd "C-;") 'sc-javascript-comment-dwim)))
+     (define-key web-mode-map (kbd "C-;") 'sc-javascript-copy-and-comment)))
 
   ;; Let flycheck handle parse errors
   ;; https://github.com/magnars/.emacs.d/blob/bc02c2d8853afc8ee61cc705945b47c725b9fb65/settings/setup-js2-mode.el#L17
