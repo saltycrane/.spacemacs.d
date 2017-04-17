@@ -1,0 +1,3 @@
+#name : import seamless-immutable
+# --
+import Immutable from "seamless-immutable";

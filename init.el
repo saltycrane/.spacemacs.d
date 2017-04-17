@@ -24,32 +24,41 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      (auto-completion :variables
-                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets")
+                      auto-completion-enable-help-tooltip 'manual
+                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets"
+                      )
      better-defaults
      chrome
      colors
+     docker
      emacs-lisp
      git
      html
      ivy
      javascript
      lua
-     (markdown :variables markdown-live-preview-engine 'vmd)
+     (markdown :variables
+               markdown-live-preview-engine 'vmd
+               markdown-hide-urls nil)
+     ocaml
      org
      osx
      python
      react
      ruby
+     shell
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
+     sql
      syntax-checking
+     typescript
      version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(ag
+   dotspacemacs-additional-packages '(rg
                                       color-theme-sanityinc-tomorrow
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
@@ -64,6 +73,10 @@ values."
                                     ;; see https://github.com/syl20bnr/spacemacs/issues/6629
                                     ;; and https://github.com/proofit404/anaconda-mode/issues/188
                                     anaconda-mode
+                                    ;; disable because I dont like the popup
+                                    company
+                                    ;; disable highlight of search results
+                                    evil-search-highlight-persist
                                     )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -225,7 +238,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative
+   dotspacemacs-line-numbers nil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -273,27 +286,27 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; don't use osx trash (too slow)
+  (setq delete-by-moving-to-trash nil)
 
   ;; https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#powerline-separators
   (setq powerline-default-separator nil)
-  (setq-default evil-search-highlight-persist nil)  ;; <- does not work
 
-  ;; add "--hidden" to the default ag argument list
-  (setq ag-arguments '("--hidden" "--nocolor" "--literal" "--line-number" "--smart-case" "--nogroup" "--column" "--stats" "--"))
+  (setq evil-want-Y-yank-to-eol t)
+
+  ;; use vanilla search instead of swiper
+  (global-set-key "\C-s" 'isearch-forward)
+  (define-key isearch-mode-map "\C-s" 'isearch-repeat-forward)
 
   ;; key bindings
   (global-set-key [f7] 'previous-error)
   (global-set-key [f8] 'next-error)
-  ;; (spacemacs/set-leader-keys "d" 'helm-mini)
   (spacemacs/set-leader-keys "d" 'ivy-switch-buffer)
-  (spacemacs/set-leader-keys "os" 'ag-project)
+  (spacemacs/set-leader-keys "os" 'rg-dwim)
   (spacemacs/set-leader-keys "og" 'dumb-jump-go)
   (spacemacs/set-leader-keys "oG" 'dumb-jump-back)
-
-  ;; set helm fuzzy match options
-  (setq helm-M-x-fuzzy-match t)
-  (setq helm-buffers-fuzzy-matching nil)
-  (setq helm-recentf-fuzzy-match t)
+  (spacemacs/set-leader-keys "of" 'flycheck-next-error)
+  (spacemacs/set-leader-keys "oF" 'flycheck-previous-error)
 
   ;; show the filepath in the frame title
   ;; http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/ 
@@ -301,9 +314,6 @@ you should place your code here."
         '((:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
-
-  ;; http://stackoverflow.com/questions/898401/how-to-get-focus-follows-mouse-over-buffers-in-emacs
-  (setq mouse-autoselect-window t)
 
   ;; Javascript/HTML/CSS indentation
   (setq sc-indent-offset 2)
@@ -320,6 +330,7 @@ you should place your code here."
    web-mode-code-indent-offset sc-indent-offset
    web-mode-attr-indent-offset sc-indent-offset)
 
+  (setq web-mode-enable-auto-quoting nil)
   (setq web-mode-enable-current-column-highlight t)
 
   (with-eval-after-load 'web-mode
@@ -327,11 +338,6 @@ you should place your code here."
     (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
     (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
     )
-
-  (custom-set-variables
-   '(coffee-tab-width 4)
-   '(web-mode-enable-auto-quoting nil)
-   )
 
   ;; use // style comments
   (defun sc-javascript-comment-dwim (arg)
@@ -346,14 +352,11 @@ you should place your code here."
       ))
 
   ;; copy and comment using // comments from above
+  ;; this works, but newlines pasted are not intuitive
   ;; reference https://github.com/redguardtoo/evil-nerd-commenter/blob/54c618aada776bfda0742819ff9e91845a91e095/evil-nerd-commenter.el#L592
   (defun sc-javascript-copy-and-comment (start end)
     (interactive "r")
     (kill-new
-     ;; ;; add a newline to the start and remove a newline from the end
-     ;; (concat
-     ;;  "\n" (replace-regexp-in-string
-     ;;        "\n\\'" "" (buffer-substring-no-properties start end))))
      (buffer-substring-no-properties start end))
     (sc-javascript-comment-dwim nil))
 
@@ -397,22 +400,24 @@ you should place your code here."
         (replace-string ">" "&gt;")
         )))
 
-  ;;; Flow (JS) flycheck config (http://flowtype.org)
+  ;; FLYCHECK FLOW (JS) setup (http://flowtype.org)
   ;; from https://github.com/bodil/emacs.d/blob/master/bodil/bodil-js.el
   (require 'f)
   (require 'json)
   (require 'flycheck)
 
+  ;; from http://stackoverflow.com/a/40905297/101911
   (defun flycheck-parse-flow (output checker buffer)
     (let ((json-array-type 'list))
       (let ((o (json-read-from-string output)))
         (mapcar #'(lambda (errp)
-                    (let ((err (cadr (assoc 'message errp))))
+                    (let ((err (cadr (assoc 'message errp)))
+                          (err2 (cadr (cdr (assoc 'message errp)))))
                       (flycheck-error-new
                        :line (cdr (assoc 'line err))
                        :column (cdr (assoc 'start err))
                        :level 'error
-                       :message (cdr (assoc 'descr err))
+                       :message (concat (cdr (assoc 'descr err)) ". " (cdr (assoc 'descr err2)))
                        :filename (f-relative
                                   (cdr (assoc 'path err))
                                   (f-dirname (file-truename
@@ -421,18 +426,62 @@ you should place your code here."
                        :checker checker)))
                 (cdr (assoc 'errors o))))))
 
-  (flycheck-define-checker javascript-flow
+  (flycheck-define-checker saltycrane-javascript-flow
     "Javascript type checking using Flow."
     :command ("flow" "--json" source-original)
     :error-parser flycheck-parse-flow
     :modes react-mode
     :next-checkers ((error . javascript-eslint))
     )
-  (add-to-list 'flycheck-checkers 'javascript-flow)
+  (add-to-list 'flycheck-checkers 'saltycrane-javascript-flow)
+
+  ;; use flow from the local project node_modules directory
+  ;; from https://emacs.stackexchange.com/a/21207/5342
+  ;; alternative: use working-directory like eslint does
+  ;; see https://github.com/flycheck/flycheck/blob/b0edfef87457a13118450969696a68505cce936d/flycheck.el#L8233
+  (defun saltycrane/use-flow-from-node-modules ()
+    (let* ((root (locate-dominating-file
+                  (or (buffer-file-name) default-directory)
+                  "node_modules"))
+           (flow (and root
+                      (expand-file-name "node_modules/.bin/flow"
+                                        root))))
+      (when (and flow (file-executable-p flow))
+        (setq-local flycheck-saltycrane-javascript-flow-executable flow))))
+  (add-hook 'flycheck-mode-hook #'saltycrane/use-flow-from-node-modules)
+
+  ;; prettier-js
+  (add-to-list 'load-path "~/.spacemacs.d/packages")
+  (require 'prettier-js)
+  (setq prettier-target-mode "react-mode")
+  ;; (setq prettier-args '("--trailing-comma" "all"))
+  (setq prettier-args '("--trailing-comma" "none"))
+  (setq prettier-width-mode nil)
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'prettier-before-save)))
 
   ;; visual-regexp-steroids
   (require 'visual-regexp)
   (require 'visual-regexp-steroids)
+
+  ;; make C-r do reverse history search in ansi-term
+  ;; https://github.com/syl20bnr/spacemacs/issues/2345#issuecomment-240634646
+  (defun saltycrane/setup-term-mode ()
+    (evil-local-set-key 'insert (kbd "C-r") 'saltycrane/send-C-r))
+  (defun saltycrane/send-C-r ()
+    (interactive)
+    (term-send-raw-string "\C-r"))
+  (add-hook 'term-mode-hook 'saltycrane/setup-term-mode)
+
+  ;; https://gist.github.com/dbrady/846766
+  (defun camelcase-region (start end)
+    "Changes region from snake_case to camelCase"
+    (interactive "r")
+    (save-restriction (narrow-to-region start end)
+                      (goto-char (point-min))
+                      (while (re-search-forward "_\\(.\\)" nil t)
+                        (replace-match (upcase (match-string 1))))))
 
   (message "end of user-config")
   )

@@ -1,0 +1,3 @@
+#name : props using HOCBase
+# --
+type Props = HOCBase<typeof enhance>;
