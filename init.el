@@ -58,11 +58,13 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(rg
+   dotspacemacs-additional-packages '(add-node-modules-path
                                       color-theme-sanityinc-tomorrow
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
                                       nginx-mode
+                                      prettier-js
+                                      rg
                                       visual-regexp
                                       visual-regexp-steroids
                                       yaml-mode
@@ -451,15 +453,11 @@ you should place your code here."
   (add-hook 'flycheck-mode-hook #'saltycrane/use-flow-from-node-modules)
 
   ;; prettier-js
-  (add-to-list 'load-path "~/.spacemacs.d/packages")
-  (require 'prettier-js)
-  (setq prettier-target-mode "react-mode")
-  ;; (setq prettier-args '("--trailing-comma" "all"))
-  (setq prettier-args '("--trailing-comma" "none"))
-  (setq prettier-width-mode nil)
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'prettier-before-save)))
+  ;; https://github.com/prettier/prettier-emacs
+  (eval-after-load 'web-mode
+    '(progn
+       (add-hook 'web-mode-hook #'add-node-modules-path)
+       (add-hook 'web-mode-hook #'prettier-js-mode)))
 
   ;; visual-regexp-steroids
   (require 'visual-regexp)
