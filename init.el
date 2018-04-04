@@ -62,6 +62,7 @@ values."
                                       color-theme-sanityinc-tomorrow
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
+                                      flycheck-flow
                                       nginx-mode
                                       prettier-js
                                       rg
@@ -402,62 +403,20 @@ you should place your code here."
         (replace-string ">" "&gt;")
         )))
 
-  ;; FLYCHECK FLOW (JS) setup (http://flowtype.org)
-  ;; from https://github.com/bodil/emacs.d/blob/master/bodil/bodil-js.el
-  (require 'f)
-  (require 'json)
-  (require 'flycheck)
-
-  ;; from http://stackoverflow.com/a/40905297/101911
-  (defun flycheck-parse-flow (output checker buffer)
-    (let ((json-array-type 'list))
-      (let ((o (json-read-from-string output)))
-        (mapcar #'(lambda (errp)
-                    (let ((err (cadr (assoc 'message errp)))
-                          (err2 (cadr (cdr (assoc 'message errp)))))
-                      (flycheck-error-new
-                       :line (cdr (assoc 'line err))
-                       :column (cdr (assoc 'start err))
-                       :level 'error
-                       :message (concat (cdr (assoc 'descr err)) ". " (cdr (assoc 'descr err2)))
-                       :filename (f-relative
-                                  (cdr (assoc 'path err))
-                                  (f-dirname (file-truename
-                                              (buffer-file-name))))
-                       :buffer buffer
-                       :checker checker)))
-                (cdr (assoc 'errors o))))))
-
-  (flycheck-define-checker saltycrane-javascript-flow
-    "Javascript type checking using Flow."
-    :command ("flow" "--json" source-original)
-    :error-parser flycheck-parse-flow
-    :modes react-mode
-    :next-checkers ((error . javascript-eslint))
-    )
-  (add-to-list 'flycheck-checkers 'saltycrane-javascript-flow)
-
-  ;; use flow from the local project node_modules directory
-  ;; from https://emacs.stackexchange.com/a/21207/5342
-  ;; alternative: use working-directory like eslint does
-  ;; see https://github.com/flycheck/flycheck/blob/b0edfef87457a13118450969696a68505cce936d/flycheck.el#L8233
-  (defun saltycrane/use-flow-from-node-modules ()
-    (let* ((root (locate-dominating-file
-                  (or (buffer-file-name) default-directory)
-                  "node_modules"))
-           (flow (and root
-                      (expand-file-name "node_modules/.bin/flow"
-                                        root))))
-      (when (and flow (file-executable-p flow))
-        (setq-local flycheck-saltycrane-javascript-flow-executable flow))))
-  (add-hook 'flycheck-mode-hook #'saltycrane/use-flow-from-node-modules)
-
   ;; prettier-js
   ;; https://github.com/prettier/prettier-emacs
   (eval-after-load 'web-mode
     '(progn
        (add-hook 'web-mode-hook #'add-node-modules-path)
        (add-hook 'web-mode-hook #'prettier-js-mode)))
+
+  ;; set up flycheck for react-mode
+  ;; uses flycheck-flow and flycheck-eslint
+  ;; Note: uses add-node-modules-path added in web-mode-hook
+  (require 'flycheck-flow)
+  (dolist (checker '(javascript-flow javascript-eslint))
+    (flycheck-add-mode checker 'react-mode))
+  (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
 
   ;; visual-regexp-steroids
   (require 'visual-regexp)
