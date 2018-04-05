@@ -62,6 +62,7 @@ values."
                                       color-theme-sanityinc-tomorrow
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
+                                      flow-minor-mode
                                       flycheck-flow
                                       nginx-mode
                                       prettier-js
@@ -412,17 +413,19 @@ you should place your code here."
 
   ;; set up flycheck for react-mode
   ;; uses flycheck-flow and flycheck-eslint
+  ;; https://github.com/lbolla/emacs-flycheck-flow
   ;; Note: uses add-node-modules-path added in web-mode-hook
   (require 'flycheck-flow)
-  (dolist (checker '(javascript-flow javascript-eslint))
-    (flycheck-add-mode checker 'react-mode))
-  (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
+  (with-eval-after-load 'flycheck
+    (flycheck-add-mode 'javascript-flow 'react-mode)
+    (flycheck-add-mode 'javascript-eslint 'react-mode)
+    (flycheck-add-next-checker 'javascript-flow 'javascript-eslint))
 
-  ;; facebook's flow-for-emacs/flow.el
-  ;; provides flow-type-at-pos
-  ;; TODO: try https://github.com/an-sh/flow-minor-mode instead
-  ;; it supports local node_modules flow and more
-  (load-file "~/.spacemacs.d/packages/flow.el")
+  ;; flow-minor-mode - replacement for facebook's flow-for-emacs/flow.el
+  ;; provides flow type at position. uses flow from project node_modules.
+  ;; https://github.com/an-sh/flow-minor-mode
+  (require 'flow-minor-mode)
+  (add-hook 'react-mode-hook 'flow-minor-enable-automatically)
 
   ;; visual-regexp-steroids
   (require 'visual-regexp)
