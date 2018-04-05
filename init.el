@@ -418,6 +418,12 @@ you should place your code here."
     (flycheck-add-mode checker 'react-mode))
   (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
 
+  ;; facebook's flow-for-emacs/flow.el
+  ;; provides flow-type-at-pos
+  ;; TODO: try https://github.com/an-sh/flow-minor-mode instead
+  ;; it supports local node_modules flow and more
+  (load-file "~/.spacemacs.d/packages/flow.el")
+
   ;; visual-regexp-steroids
   (require 'visual-regexp)
   (require 'visual-regexp-steroids)
@@ -430,15 +436,6 @@ you should place your code here."
     (interactive)
     (term-send-raw-string "\C-r"))
   (add-hook 'term-mode-hook 'saltycrane/setup-term-mode)
-
-  ;; https://gist.github.com/dbrady/846766
-  (defun camelcase-region (start end)
-    "Changes region from snake_case to camelCase"
-    (interactive "r")
-    (save-restriction (narrow-to-region start end)
-                      (goto-char (point-min))
-                      (while (re-search-forward "_\\(.\\)" nil t)
-                        (replace-match (upcase (match-string 1))))))
 
   (message "end of user-config")
   )
