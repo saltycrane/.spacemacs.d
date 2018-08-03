@@ -31,6 +31,7 @@ values."
      better-defaults
      chrome
      colors
+     csv
      docker
      emacs-lisp
      git
