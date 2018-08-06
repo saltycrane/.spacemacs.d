@@ -61,6 +61,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(add-node-modules-path
                                       color-theme-sanityinc-tomorrow
+                                      doom-themes
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
                                       flow-minor-mode
@@ -80,6 +81,12 @@ values."
                                     anaconda-mode
                                     ;; disable because I dont like the popup
                                     company
+                                    doom-molokai-theme
+                                    doom-one-theme
+                                    doom-city-lights-theme
+                                    doom-dracula-theme
+                                    doom-nord-light-theme
+                                    doom-peacock-theme
                                     ;; disable highlight of search results
                                     evil-search-highlight-persist
                                     )
@@ -136,6 +143,12 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         doom-molokai
+                         doom-peacock
+                         doom-one
+                         doom-city-lights
+                         doom-dracula
+                         doom-nord-light
                          sanityinc-tomorrow-bright
                          spacemacs-dark
                          )
