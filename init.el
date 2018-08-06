@@ -18,7 +18,6 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-     csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -37,6 +36,7 @@ values."
      git
      html
      ivy
+     javascript
      lua
      (markdown :variables
                markdown-live-preview-engine 'vmd
@@ -45,6 +45,7 @@ values."
      org
      osx
      python
+     react
      ruby
      shell
      (spell-checking :variables
@@ -59,7 +60,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(add-node-modules-path
-                                      doom-themes
+                                      color-theme-sanityinc-tomorrow
                                       dumb-jump  ;; https://github.com/jacktasia/dumb-jump
                                       evil-matchit
                                       flow-minor-mode
@@ -67,7 +68,6 @@ values."
                                       nginx-mode
                                       prettier-js
                                       rg
-                                      rjsx-mode
                                       visual-regexp
                                       visual-regexp-steroids
                                       yaml-mode
@@ -80,12 +80,6 @@ values."
                                     anaconda-mode
                                     ;; disable because I dont like the popup
                                     company
-                                    doom-molokai-theme
-                                    doom-one-theme
-                                    doom-city-lights-theme
-                                    doom-dracula-theme
-                                    doom-nord-light-theme
-                                    doom-peacock-theme
                                     ;; disable highlight of search results
                                     evil-search-highlight-persist
                                     )
@@ -142,12 +136,6 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         doom-molokai
-                         doom-peacock
-                         doom-one
-                         doom-city-lights
-                         doom-dracula
-                         doom-nord-light
                          sanityinc-tomorrow-bright
                          spacemacs-dark
                          )
@@ -397,6 +385,9 @@ you should place your code here."
   (setq-default js2-mode-show-parse-errors nil)
   (setq-default js2-mode-show-strict-warnings nil)
 
+  ;; set .js files to react mode
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
+
   (global-evil-matchit-mode 1)
 
   (add-to-list 'auto-mode-alist '("www\\.saltycrane\\.com" . web-mode))
@@ -414,33 +405,28 @@ you should place your code here."
         (replace-string ">" "&gt;")
         )))
 
-  ;; set .js files to rjsx-mode
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
-
   ;; prettier-js
   ;; https://github.com/prettier/prettier-emacs
-  (eval-after-load 'rjsx-mode
+  (eval-after-load 'web-mode
     '(progn
-       (add-hook 'rjsx-mode-hook #'add-node-modules-path)
-       (add-hook 'rjsx-mode-hook #'prettier-js-mode)))
+       (add-hook 'web-mode-hook #'add-node-modules-path)
+       (add-hook 'web-mode-hook #'prettier-js-mode)))
 
-  ;; set up flycheck for rjsx-mode
+  ;; set up flycheck for react-mode
   ;; uses flycheck-flow and flycheck-eslint
   ;; https://github.com/lbolla/emacs-flycheck-flow
-  ;; Note: uses add-node-modules-path added in rjsx-mode-hook
+  ;; Note: uses add-node-modules-path added in web-mode-hook
   (require 'flycheck-flow)
   (with-eval-after-load 'flycheck
-    (flycheck-add-mode 'javascript-flow 'rjsx-mode)
-    (flycheck-add-mode 'javascript-eslint 'rjsx-mode)
-    (flycheck-add-next-checker 'javascript-flow 'javascript-eslint)
-    )
-  (add-hook 'rjsx-mode-hook 'flycheck-mode)
+    (flycheck-add-mode 'javascript-flow 'react-mode)
+    (flycheck-add-mode 'javascript-eslint 'react-mode)
+    (flycheck-add-next-checker 'javascript-flow 'javascript-eslint))
 
   ;; flow-minor-mode - replacement for facebook's flow-for-emacs/flow.el
   ;; provides flow type at position. uses flow from project node_modules.
   ;; https://github.com/an-sh/flow-minor-mode
   (require 'flow-minor-mode)
-  (add-hook 'rjsx-mode-hook 'flow-minor-enable-automatically)
+  (add-hook 'react-mode-hook 'flow-minor-enable-automatically)
 
   ;; visual-regexp-steroids
   (require 'visual-regexp)
