@@ -73,6 +73,10 @@ values."
                                       visual-regexp-steroids
                                       yaml-mode
                                       )
+   ;; A list of packages that cannot be updated.
+   dotspacemacs-frozen-packages '(counsel-projectile
+                                  projectile
+                                  )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(
                                     ;; disable because getting ImportError.
@@ -456,3 +460,19 @@ you should place your code here."
 
   (message "end of user-config")
   )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol t)
+ '(flycheck-javascript-flow-args nil)
+ '(package-selected-packages
+   (quote
+    (visual-regexp caml typescript-mode powerline pythonic pcre2el org-category-capture alert log4e gntp org-plus-contrib hydra dash-functional parent-mode helm helm-core haml-mode ham-mode markdown-mode html-to-markdown fringe-helper git-gutter+ git-gutter flyspell-correct flycheck flx magit git-commit ghub with-editor smartparens iedit anzu evil goto-chg highlight json-mode tablist magit-popup docker-tramp json-snatcher json-reformat projectile pkg-info epl counsel swiper ivy pos-tip company inf-ruby bind-map bind-key packed async avy auto-complete popup f yasnippet s js2-mode yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights vmd-mode visual-regexp-steroids vi-tilde-fringe uuidgen utop use-package unfill tuareg toc-org tide tern tagedit sql-indent spaceline smex smeargle slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rg reveal-in-osx-finder restart-emacs request rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pip-requirements persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file ocp-indent nginx-mode neotree mwim multi-term move-text mmm-mode minitest merlin markdown-toc magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl js2-refactor js-doc ivy-hydra indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make google-translate golden-ratio gnuplot gmail-message-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-ivy flymd flycheck-pos-tip flycheck-flow flx-ido flow-minor-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav edit-server dumb-jump doom-themes dockerfile-mode docker diminish diff-hl cython-mode csv-mode counsel-projectile company-statistics company-quickhelp column-enforce-mode color-theme-sanityinc-tomorrow color-identifiers-mode coffee-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent add-node-modules-path adaptive-wrap ace-window ace-link ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
