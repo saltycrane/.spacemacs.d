@@ -1,0 +1,3 @@
+#name : hoc type import
+# --
+import type { HOC } from "main/types/shared";

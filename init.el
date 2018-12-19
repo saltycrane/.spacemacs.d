@@ -149,7 +149,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -207,7 +207,7 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    ;; If non-nil, J and K move lines up and down when in visual mode.
    ;; (default nil)
-   dotspacemacs-visual-line-move-text nil
+   dotspacemacs-visual-line-move-text t
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
@@ -361,7 +361,8 @@ you should place your code here."
   ;; https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#powerline-separators
   (setq powerline-default-separator nil)
 
-  (setq evil-want-Y-yank-to-eol t)
+  ;; see instead: dotspacemacs-remap-Y-to-y$
+  ;; (setq evil-want-Y-yank-to-eol t)
 
   ;; key bindings
   (global-set-key [f7] 'previous-error)

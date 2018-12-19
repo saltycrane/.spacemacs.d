@@ -30,3 +30,14 @@ Failed attempts:
     (setq-local flycheck-javascript-eslint-executable "eslint --rule no-warning-comments: 0 ")
     )
   (add-hook 'flycheck-mode-hook #'saltycrane/add-options-to-eslint-executable)
+
+To try:
+
+SPC j w - avy jump word
+[ SPC   - insert space above
+] SPC   - insert space below
+SPC p a - toggle between implementation and test
+SPC p I - invalidate projectile cache
+SPC t s - toggle flycheck
+SPC e l - toggle error list display
+SPC e . - error trasient state
