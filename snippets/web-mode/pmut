@@ -1,3 +1,0 @@
-#name : console.log.mut
-# --
-console.log("[`(file-name-nondirectory (buffer-file-name))`] $1 (asMutable)", Immutable($1).asMutable({deep: true}));

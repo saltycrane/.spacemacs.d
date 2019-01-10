@@ -1,3 +1,0 @@
-#name : eliot.console.log.variable
-# --
-eliotDebug$1 && console.log("[`(file-name-nondirectory (buffer-file-name))`] $2", $2);

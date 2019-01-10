@@ -55,16 +55,14 @@ values."
      go
      html
      ivy
-     javascript
+     (javascript :variables node-add-modules-path t)
      lua
      (markdown :variables
                markdown-live-preview-engine 'vmd
                markdown-hide-urls nil)
-     ocaml
      org
      osx
      python
-     react
      ruby
      shell
      (spell-checking :variables
@@ -80,7 +78,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(add-node-modules-path
+   dotspacemacs-additional-packages '(
+                                      blacken
                                       doom-themes
                                       flow-minor-mode
                                       flycheck-flow
@@ -173,7 +172,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 12
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -201,7 +200,7 @@ values."
    ;; works in the GUI. (default nil)
    dotspacemacs-distinguish-gui-tab nil
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
-   dotspacemacs-remap-Y-to-y$ nil
+   dotspacemacs-remap-Y-to-y$ t
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
    ;; there. (default t)
    dotspacemacs-retain-visual-state-on-shift t
@@ -361,9 +360,6 @@ you should place your code here."
   ;; https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#powerline-separators
   (setq powerline-default-separator nil)
 
-  ;; see instead: dotspacemacs-remap-Y-to-y$
-  ;; (setq evil-want-Y-yank-to-eol t)
-
   ;; key bindings
   (global-set-key [f7] 'previous-error)
   (global-set-key [f8] 'next-error)
@@ -380,6 +376,12 @@ you should place your code here."
         '((:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
+
+  ;; python black auto-formatting
+  ;; https://github.com/ambv/black
+  ;; https://github.com/proofit404/blacken
+  (require 'blacken)
+  (add-hook 'python-mode-hook 'blacken-mode)
 
   ;; Javascript/HTML/CSS indentation
   (setq sc-indent-offset 2)
@@ -446,9 +448,6 @@ you should place your code here."
   (setq-default js2-mode-show-parse-errors nil)
   (setq-default js2-mode-show-strict-warnings nil)
 
-  ;; set .js files to react mode
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
-
   (global-evil-matchit-mode 1)
 
   (add-to-list 'auto-mode-alist '("www\\.saltycrane\\.com" . web-mode))
@@ -468,15 +467,15 @@ you should place your code here."
 
   ;; prettier-js
   ;; https://github.com/prettier/prettier-emacs
+  ;; Note: uses add-node-modules-path from javascript layer
   (eval-after-load 'web-mode
     '(progn
-       (add-hook 'web-mode-hook #'add-node-modules-path)
        (add-hook 'web-mode-hook #'prettier-js-mode)))
 
   ;; set up flycheck for react-mode
   ;; uses flycheck-flow and flycheck-eslint
   ;; https://github.com/lbolla/emacs-flycheck-flow
-  ;; Note: uses add-node-modules-path added in web-mode-hook
+  ;; Note: uses add-node-modules-path from javascript layer
   (require 'flycheck-flow)
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'javascript-flow 'react-mode)
@@ -504,21 +503,23 @@ you should place your code here."
 
   (message "end of user-config")
   )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (visual-regexp-steroids visual-regexp rg prettier-js nginx-mode flycheck-flow flow-minor-mode doom-themes all-the-icons memoize add-node-modules-path yaml-mode yapfify xterm-color web-mode web-beautify vmd-mode utop unfill tuareg caml tide typescript-mode tagedit sql-indent slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder rbenv rake rainbow-mode rainbow-identifiers pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements pbcopy osx-trash osx-dictionary org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download ocp-indent mwim multi-term mmm-mode minitest merlin markdown-toc lua-mode livid-mode skewer-mode simple-httpd live-py-mode less-css-mode launchctl js2-refactor multiple-cursors js2-mode js-doc hy-mode htmlize haml-mode go-guru go-eldoc gnuplot gmail-message-mode ham-mode markdown-mode html-to-markdown gh-md fuzzy flyspell-correct-ivy flyspell-correct flymd flycheck-pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode edit-server dockerfile-mode docker json-mode tablist docker-tramp json-snatcher json-reformat cython-mode csv-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-go go-mode company-anaconda company color-identifiers-mode coffee-mode chruby bundler inf-ruby auto-yasnippet yasnippet auto-dictionary anaconda-mode pythonic ac-ispell auto-complete git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl smeargle orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit ghub treepy let-alist graphql with-editor ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy))))
+    (yasnippet-snippets yapfify yaml-mode xterm-color ws-butler writeroom-mode visual-fill-column winum web-mode web-beautify volatile-highlights vmd-mode visual-regexp-steroids visual-regexp vi-tilde-fringe uuidgen unfill treemacs-projectile treemacs-evil treemacs ht pfuture toc-org tide typescript-mode tern tagedit symon string-inflection sql-indent spaceline-all-the-icons spaceline powerline smex smeargle slim-mode shell-pop seeing-is-believing scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocop rspec-mode robe rg wgrep reveal-in-osx-finder restart-emacs request rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode prettier-js popwin pippel pipenv pip-requirements persp-mode password-generator paradox spinner overseer osx-trash osx-dictionary orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-bullets org-brain open-junk-file nginx-mode nameless mwim multi-term move-text mmm-mode minitest markdown-toc magit-svn magit-gitflow macrostep lua-mode lorem-ipsum livid-mode skewer-mode live-py-mode link-hint launchctl json-navigator hierarchy js2-refactor multiple-cursors js2-mode js-doc ivy-yasnippet ivy-xref ivy-purpose window-purpose imenu-list ivy-hydra indent-guide importmagic epc ctable concurrent deferred impatient-mode simple-httpd hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make helm helm-core haml-mode google-translate golden-ratio godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc go-mode gnuplot gmail-message-mode ham-mode markdown-mode html-to-markdown gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-ivy flyspell-correct flymd flycheck-pos-tip flycheck-flow flycheck flx-ido flx flow-minor-mode fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-magit magit git-commit with-editor evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav editorconfig edit-server dumb-jump doom-themes doom-modeline eldoc-eval shrink-path all-the-icons memoize dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl cython-mode csv-mode counsel-projectile projectile pkg-info epl counsel-css counsel swiper ivy company-statistics company-quickhelp pos-tip company column-enforce-mode color-identifiers-mode clean-aindent-mode chruby centered-cursor-mode bundler inf-ruby browse-at-remote blacken auto-yasnippet yasnippet auto-highlight-symbol auto-dictionary auto-compile packed anaconda-mode pythonic f dash s aggressive-indent add-node-modules-path ace-window ace-link avy ac-ispell auto-complete popup which-key use-package pcre2el org-plus-contrib hydra font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+)

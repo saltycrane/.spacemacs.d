@@ -1,3 +1,0 @@
-#name : recompose compose import
-# --
-import { compose } from "recompose";
