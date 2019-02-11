@@ -377,6 +377,14 @@ you should place your code here."
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
 
+  ;; for git-link (included in spacemacs git layer)
+  (eval-after-load 'git-link
+    '(progn
+       (add-to-list 'git-link-remote-alist
+                    '("git\\.corp\\.tc" git-link-github))
+       (add-to-list 'git-link-commit-remote-alist
+                    '("git\\.corp\\.tc" git-link-commit-github))))
+
   ;; python black auto-formatting
   ;; https://github.com/ambv/black
   ;; https://github.com/proofit404/blacken
