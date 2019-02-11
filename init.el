@@ -381,6 +381,7 @@ you should place your code here."
   ;; https://github.com/ambv/black
   ;; https://github.com/proofit404/blacken
   (require 'blacken)
+  (setq blacken-line-length 80)
   (add-hook 'python-mode-hook 'blacken-mode)
 
   ;; Javascript/HTML/CSS indentation
