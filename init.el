@@ -491,6 +491,16 @@ you should place your code here."
     (flycheck-add-mode 'javascript-eslint 'react-mode)
     (flycheck-add-next-checker 'javascript-flow 'javascript-eslint))
 
+  ;; flycheck for typscript-tsx-mode (eslint, tide)
+  (setq-default flycheck-disabled-checkers '(typescript-tslint))
+  (with-eval-after-load 'tide
+    (with-eval-after-load 'flycheck
+      (flycheck-add-mode 'typescript-tide 'typescript-tsx-mode)
+      (flycheck-add-mode 'javascript-eslint 'typescript-tsx-mode)
+      (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
+      ))
+  (setq-default flycheck-eslint-args '("--ext" ".js" "--ext" ".tsx"))
+
   ;; flow-minor-mode - replacement for facebook's flow-for-emacs/flow.el
   ;; provides flow type at position. uses flow from project node_modules.
   ;; https://github.com/an-sh/flow-minor-mode
