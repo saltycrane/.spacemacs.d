@@ -480,6 +480,9 @@ you should place your code here."
   (eval-after-load 'web-mode
     '(progn
        (add-hook 'web-mode-hook #'prettier-js-mode)))
+  (eval-after-load 'js2-mode
+    '(progn
+       (add-hook 'js2-mode-hook #'prettier-js-mode)))
 
   ;; set up flycheck for react-mode
   ;; uses flycheck-flow and flycheck-eslint
