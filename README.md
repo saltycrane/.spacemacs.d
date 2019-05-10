@@ -8,8 +8,9 @@ Used for TypeScript, JavaScript, React, Python.
     $ cd ~/.emacs.d
     $ git checkout develop
     $ git clone https://github.com/saltycrane/.spacemacs.d ~/.spacemacs.d
-    $ npm install -g typescript tslint
+    $ npm install -g typescript
     $ npm install -g prettier
+    $ npm install -g vmd  # for markdown preview
     $ brew install ripgrep
     $ cd ~/.spacemacs.d
     $ python3.6 -m venv venv
