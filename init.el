@@ -84,6 +84,7 @@ values."
                                       doom-themes
                                       flow-minor-mode
                                       flycheck-flow
+                                      graphql-mode
                                       nginx-mode
                                       prettier-js
                                       rg
