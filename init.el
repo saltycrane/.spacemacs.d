@@ -64,7 +64,7 @@ This function should only modify configuration layer settings."
                markdown-hide-urls nil)
      multiple-cursors
      org
-     osx
+     (osx :variables osx-command-as 'super)
      python
      ruby
      search-engine
