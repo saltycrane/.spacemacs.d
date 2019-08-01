@@ -67,6 +67,7 @@ This function should only modify configuration layer settings."
      osx
      python
      ruby
+     search-engine
      shell
      (spell-checking :variables
                      spell-checking-enable-by-default nil)
@@ -492,6 +493,7 @@ you should place your code here."
   (spacemacs/set-leader-keys "oG" 'dumb-jump-back)
   (spacemacs/set-leader-keys "of" 'flycheck-next-error)
   (spacemacs/set-leader-keys "oF" 'flycheck-previous-error)
+  (spacemacs/set-leader-keys "ow" 'engine/search-google)
 
   ;; show the filepath in the frame title
   ;; http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/ 
