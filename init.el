@@ -84,6 +84,7 @@ This function should only modify configuration layer settings."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
                                       blacken
+                                      diredfl
                                       doom-themes
                                       flow-minor-mode
                                       flycheck-flow
@@ -501,6 +502,9 @@ you should place your code here."
         '((:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name))
                    "%b"))))
+
+  ;; colorized dired https://github.com/purcell/diredfl
+  (diredfl-global-mode t)
 
   ;; for git-link (included in spacemacs git layer)
   (eval-after-load 'git-link
