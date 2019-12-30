@@ -494,6 +494,7 @@ you should place your code here."
   (spacemacs/set-leader-keys "oG" 'dumb-jump-back)
   (spacemacs/set-leader-keys "of" 'flycheck-next-error)
   (spacemacs/set-leader-keys "oF" 'flycheck-previous-error)
+  (spacemacs/set-leader-keys "or" 'revert-buffer)
   (spacemacs/set-leader-keys "ow" 'engine/search-google)
 
   ;; show the filepath in the frame title
